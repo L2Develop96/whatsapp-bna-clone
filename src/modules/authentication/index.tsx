@@ -61,6 +61,7 @@ const Authentication = () => {
             id: userId,
             username: data[userId].username,
             email: data[userId].email,
+            fullName: data[userId].fullName,
           });
           navigateTo('chat');
           return;

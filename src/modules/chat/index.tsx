@@ -1,4 +1,4 @@
-import { Box, HStack, Text, VStack } from '@chakra-ui/react';
+import { Box, HStack, VStack } from '@chakra-ui/react';
 import ChatHeader from './components/ChatHeader';
 import ChatContent from './components/ChatContent';
 import { secondaryColor } from '../../utils/constant';

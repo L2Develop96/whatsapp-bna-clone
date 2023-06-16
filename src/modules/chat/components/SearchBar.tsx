@@ -12,6 +12,7 @@ const SearchBar = () => {
           variant="unstyled"
           type="text"
           placeholder="Search or start new chat"
+          color={quaternaryColor}
         />
       </HStack>
       <Box>
