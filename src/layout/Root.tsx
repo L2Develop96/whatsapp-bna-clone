@@ -6,7 +6,7 @@ const RootLayout = () => {
   return (
     <Flex flexDirection="column" minHeight="100vh">
       <Box as="main" display="flex" flex="1" bg={primaryColor} p={5}>
-        <Container maxW="8xl">
+        <Container minW="90%">
           <Outlet />
         </Container>
       </Box>

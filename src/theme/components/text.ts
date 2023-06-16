@@ -4,7 +4,7 @@ export const textStyles: Record<string, Record<string, StyleConfig>> = {
   components: {
     Text: {
       baseStyle: {
-        color: 'white',
+        color: '#e9edef',
         fontSize: 14,
         p: 0,
       },

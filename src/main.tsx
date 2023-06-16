@@ -1,16 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App.tsx';
-import AuthContext from './app/index.ts';
 import { ChakraProvider } from '@chakra-ui/react';
 import theme from './theme/index.ts';
+import AuthContextProvider from './app/context.tsx';
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <AuthContext.Provider value={{ isAuthenticated: false, user: {} }}>
+    <AuthContextProvider>
       <ChakraProvider theme={theme()}>
         <App />
       </ChakraProvider>
-    </AuthContext.Provider>
+    </AuthContextProvider>
   </React.StrictMode>
 );
