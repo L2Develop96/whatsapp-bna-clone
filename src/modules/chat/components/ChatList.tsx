@@ -48,7 +48,7 @@ const ListItem = ({ session }: { session: ISession }): JSX.Element => {
     const _getSelectedSession = await chatActions.getMessages(session?.id);
     setSession(_getSelectedSession);
   };
-
+  console.log(session);
   return (
     <StyledListItem onClick={setSessionHandler}>
       <Center flex={1} px={2}>

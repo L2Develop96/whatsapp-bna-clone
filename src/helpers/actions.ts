@@ -59,15 +59,17 @@ export const chatActions = {
   },
   createSession: async function (user1: User, user2: User) {
     try {
+      const sessionId = `${user1?.id}-${user2?.id}`;
       const body = {
+        sessionId,
         user1,
         user2,
         messages: [],
       };
       const existentSessions = await fetch(`${API_ENDPOINT}/chat.json`);
-      const data = await existentSessions.json();
+      const data: ISession[] = await existentSessions.json();
       for (const session in data) {
-        if (data[session]?.id === `${user1?.id}-${user2?.id}`) {
+        if (data[session]?.sessionId === `${user1?.id}-${user2?.id}`) {
           throw new Error('A session has already been created with this user');
         }
       }

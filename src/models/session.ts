@@ -2,6 +2,7 @@ import { User } from './user';
 
 export interface ISession {
   id: string;
+  sessionId: string;
   user1: User;
   user2: User;
   messages: IMessage[];

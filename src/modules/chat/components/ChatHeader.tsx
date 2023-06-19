@@ -1,4 +1,5 @@
 import {
+  Box,
   Flex,
   HStack,
   Image,
@@ -6,6 +7,7 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
+  Tooltip,
   useDisclosure,
 } from '@chakra-ui/react';
 import { useContext } from 'react';
@@ -41,10 +43,18 @@ const ChatHeader = () => {
         src={`https://api.dicebear.com/6.x/adventurer/svg?seed=${user.fullName}`}
         w={16}
       />
-      <Flex gap={4}>
-        <UsersIcon color={quaternaryColor} />
-        <StatusIcon color={quaternaryColor} />
-        <NewChatIcon color={quaternaryColor} onClick={onOpen} />
+      <Flex gap={7} alignItems="center">
+        <Box>
+          <UsersIcon color={quaternaryColor} />
+        </Box>
+        <Box>
+          <StatusIcon color={quaternaryColor} />
+        </Box>
+        <Tooltip label="New Chat">
+          <Box _hover={{ cursor: 'pointer' }}>
+            <NewChatIcon color={quaternaryColor} onClick={onOpen} />
+          </Box>
+        </Tooltip>
         <Menu>
           <MenuButton>
             <MoreIcon color={quaternaryColor} />

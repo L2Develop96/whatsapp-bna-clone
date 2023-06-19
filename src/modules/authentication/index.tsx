@@ -22,7 +22,10 @@ const Authentication = () => {
   const passwordRef = useRef<HTMLInputElement | null>(null);
   const { setUser, setAuthenticated } = useContext(AuthContext);
 
-  const onLogin = async (): Promise<void> => {
+  const onLogin = async (
+    e: React.SyntheticEvent<HTMLFormElement>
+  ): Promise<void> => {
+    e.preventDefault();
     if (!usernameRef.current || !passwordRef.current) return;
 
     if (
@@ -83,7 +86,7 @@ const Authentication = () => {
   return (
     <Box h="100%" display="flex" alignItems="center" justifyContent="center">
       <Card size="lg" minW="500px" minH="300px">
-        <form>
+        <form onSubmit={onLogin}>
           <VStack gap={5} mt={5}>
             <Heading size="md" color={primaryColor}>
               What's App Bro?
@@ -107,7 +110,7 @@ const Authentication = () => {
                 size="sm"
               />
             </FormControl>
-            <Button onClick={onLogin}>Submit</Button>
+            <Button type="submit">Submit</Button>
           </VStack>
         </form>
       </Card>
