@@ -1,3 +1,4 @@
+import { User } from '../models/user';
 import { API_ENDPOINT } from '../utils/constant';
 
 export const userActions = {
@@ -16,7 +17,6 @@ export const userActions = {
       const data = await res.json();
       const users = [];
       for (const user in data) {
-        console.log(userId);
         if (data[user]?.id !== userId) {
           users.push(data[user]);
         }
@@ -29,15 +29,15 @@ export const userActions = {
 };
 
 export const chatActions = {
-  getChats: async (userId: string) => {
+  getChats: async (user: User) => {
     try {
       const res = await fetch(`${API_ENDPOINT}/chat.json`);
       const data = await res.json();
       const chatSessions = [];
       for (const session in data) {
         if (
-          data[session]?.user1Id === userId ||
-          data[session]?.user2Id === userId
+          data[session]?.user1?.id === user?.id ||
+          data[session]?.user2?.id === user?.id
         ) {
           chatSessions?.push(data[session]);
         }
@@ -47,18 +47,18 @@ export const chatActions = {
       throw new Error(`Error has ocurred ${error}`);
     }
   },
-  createSession: async (userId1: string, userId2: string) => {
+  createSession: async (user1: User, user2: User) => {
     try {
       const body = {
-        id: `${userId1}-${userId2}`,
-        userId1,
-        userId2,
+        id: `${user1?.id}-${user2?.id}`,
+        user1,
+        user2,
         messages: [],
       };
       const existentSessions = await fetch(`${API_ENDPOINT}/chat.json`);
       const data = await existentSessions.json();
       for (const session in data) {
-        if (data[session]?.id === `${userId1}-${userId2}`) {
+        if (data[session]?.id === `${user1?.id}-${user2?.id}`) {
           throw new Error('A session has already been created with this user');
         }
       }

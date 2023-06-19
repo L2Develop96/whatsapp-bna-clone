@@ -12,7 +12,7 @@ import {
 import { useContext, useEffect, useState } from 'react';
 import { User } from '../../../models/user';
 import { chatActions, userActions } from '../../../helpers/actions';
-import { AuthContext } from '../../../app/context';
+import { AuthContext } from '../../../app/authContext';
 
 const NewSession = ({
   onClose,
@@ -39,9 +39,9 @@ const NewSession = ({
     getUsers();
   }, [user?.id]);
 
-  const createSession = (userId: string) => {
+  const createSession = (user2: User) => {
     chatActions
-      .createSession(userId, user?.id)
+      .createSession(user2, user)
       .then((data) => {
         if (data) {
           toast({
@@ -73,7 +73,7 @@ const NewSession = ({
                 _hover={{
                   cursor: 'pointer',
                 }}
-                onClick={() => createSession(user?.id)}
+                onClick={() => createSession(user)}
                 key={user?.id}
               >
                 {user?.fullName}

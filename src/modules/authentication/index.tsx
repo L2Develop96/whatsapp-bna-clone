@@ -12,7 +12,7 @@ import Card from '../../components/Card';
 import { API_ENDPOINT, primaryColor } from '../../utils/constant';
 import { useNavigate } from 'react-router-dom';
 import { useContext, useRef, useState } from 'react';
-import { AuthContext } from '../../app/context';
+import { AuthContext } from '../../app/authContext';
 
 const Authentication = () => {
   const navigate = useNavigate();

@@ -1,6 +1,6 @@
 import { Flex, HStack, Image, useDisclosure } from '@chakra-ui/react';
 import { useContext } from 'react';
-import { AuthContext } from '../../../app/context';
+import { AuthContext } from '../../../app/authContext';
 import { ReactComponent as UsersIcon } from '../../../assets/icons/users.svg';
 import { ReactComponent as MoreIcon } from '../../../assets/icons/more.svg';
 import { ReactComponent as NewChatIcon } from '../../../assets/icons/new_chat.svg';

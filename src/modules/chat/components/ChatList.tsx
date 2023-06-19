@@ -8,16 +8,51 @@ import {
   List,
   Text,
   VStack,
+  styled,
 } from '@chakra-ui/react';
-import { useContext } from 'react';
-import { AuthContext } from '../../../app/context';
+import { useContext, useEffect, useMemo, useState } from 'react';
+import { chatActions } from '../../../helpers/actions';
+import { AuthContext } from '../../../app/authContext';
+import { ISession } from '../../../models/session';
+import { SessionContext } from '../../../app/sessionContext';
 
-const ListItem = (): JSX.Element => {
+const StyledListItem = styled(ChakraListItem, {
+  baseStyle: {
+    w: '100%',
+    display: 'flex',
+    _hover: {
+      cursor: 'pointer',
+      backgroundColor: '#202c33',
+    },
+  },
+});
+
+const ListItem = ({ session }: { session: ISession }): JSX.Element => {
+  const { user } = useContext(AuthContext);
+  const { setSession } = useContext(SessionContext);
+
+  const latestMessage = useMemo(() => {
+    return session?.messages
+      ?.filter((msg) => msg?.senderId === user?.id)
+      ?.at(-1);
+  }, [session?.messages, user?.id]);
+
+  const recipient = useMemo(() => {
+    if (session?.user1?.id !== user?.id) {
+      return session?.user1;
+    }
+    return session?.user2;
+  }, [session?.user1, session?.user2, user?.id]);
+
+  const setSessionHandler = () => {
+    setSession(session);
+  };
+
   return (
-    <ChakraListItem w="100%" display="flex">
+    <StyledListItem onClick={setSessionHandler}>
       <Center flex={1}>
         <Avatar
-          src={`https://api.dicebear.com/6.x/adventurer/svg?seed=hachem`}
+          src={`https://api.dicebear.com/6.x/adventurer/svg?seed=${recipient?.fullName}`}
         />
         <VStack
           borderTop="0.05em solid rgba(134,150,160,0.15)"
@@ -25,20 +60,37 @@ const ListItem = (): JSX.Element => {
           alignItems="flex-start"
         >
           <Divider borderColor="rgba(134,150,160,0.15)" />
-          <Box w="100%">
+          <Box w="100%" p={2}>
             <Flex justifyContent="space-between" alignItems="center">
-              <Text fontSize="18px">Hachem Ben Amor</Text>
-              <Text mr={5}>Tuesday</Text>
+              <Text fontSize="18px">{recipient?.fullName}</Text>
+              <Text mr={5}>
+                {new Date(latestMessage?.date ?? '').toLocaleDateString()}
+              </Text>
             </Flex>
-            <Text>Hello bro how are you?</Text>
+            <Text>{latestMessage?.message}</Text>
           </Box>
         </VStack>
       </Center>
-    </ChakraListItem>
+    </StyledListItem>
   );
 };
 
 const ChatList = () => {
+  const { user } = useContext(AuthContext);
+  const [sessionsList, setSessionsList] = useState<ISession[]>([]);
+  useEffect(() => {
+    const getSessions = () =>
+      chatActions.getChats(user).then(
+        (data) => {
+          setSessionsList(data);
+        },
+        (err) => {
+          console.log(err);
+        }
+      );
+    getSessions();
+  }, [user]);
+
   return (
     <List
       display="flex"
@@ -47,7 +99,9 @@ const ChatList = () => {
       alignItems={'start'}
       gap={3}
     >
-      <ListItem />
+      {sessionsList?.map((session, index) => (
+        <ListItem key={index} session={session} />
+      ))}
     </List>
   );
 };
