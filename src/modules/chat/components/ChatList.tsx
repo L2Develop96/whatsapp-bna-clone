@@ -10,7 +10,7 @@ import {
   VStack,
   styled,
 } from '@chakra-ui/react';
-import { useContext, useEffect, useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo } from 'react';
 import { chatActions } from '../../../helpers/actions';
 import { AuthContext } from '../../../app/authContext';
 import { ISession } from '../../../models/session';
@@ -44,13 +44,14 @@ const ListItem = ({ session }: { session: ISession }): JSX.Element => {
     return session?.user2;
   }, [session?.user1, session?.user2, user?.id]);
 
-  const setSessionHandler = () => {
-    setSession(session);
+  const setSessionHandler = async () => {
+    const _getSelectedSession = await chatActions.getMessages(session?.id);
+    setSession(_getSelectedSession);
   };
 
   return (
     <StyledListItem onClick={setSessionHandler}>
-      <Center flex={1}>
+      <Center flex={1} px={2}>
         <Avatar
           src={`https://api.dicebear.com/6.x/adventurer/svg?seed=${recipient?.fullName}`}
         />
@@ -77,7 +78,7 @@ const ListItem = ({ session }: { session: ISession }): JSX.Element => {
 
 const ChatList = () => {
   const { user } = useContext(AuthContext);
-  const [sessionsList, setSessionsList] = useState<ISession[]>([]);
+  const { sessionsList, setSessionsList } = useContext(SessionContext);
   useEffect(() => {
     const getSessions = () =>
       chatActions.getChats(user).then(
@@ -89,8 +90,7 @@ const ChatList = () => {
         }
       );
     getSessions();
-  }, [user]);
-
+  }, [setSessionsList, user]);
   return (
     <List
       display="flex"

@@ -25,6 +25,7 @@ import { ReactComponent as DiscussionArrow } from '../../../assets/icons/discuss
 import ChatBg from '../../../assets/bg-chat.png';
 import { AuthContext } from '../../../app/authContext';
 import { User } from '../../../models/user';
+import { chatActions } from '../../../helpers/actions';
 
 const IntroComponent = (): JSX.Element => {
   return (
@@ -124,8 +125,32 @@ const ChatBubble = ({
   );
 };
 
-const MessageInput = (): JSX.Element => {
-  const onSubmit = () => {};
+const MessageInput = ({ sessionId }: { sessionId: string }): JSX.Element => {
+  const { user } = useContext(AuthContext);
+  const { setSession } = useContext(SessionContext);
+
+  const onSubmit = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (!event?.currentTarget?.value?.trim()) return;
+    if (event.key === 'Enter') {
+      const inputElement = event.currentTarget as HTMLInputElement;
+      chatActions
+        .sendMsg(sessionId, user, {
+          id: new Date()?.toString(),
+          date: new Date()?.toLocaleDateString(),
+          message: event?.currentTarget?.value?.trim(),
+          senderId: user?.id,
+        })
+        .then(
+          (data) => {
+            setSession(data);
+            inputElement.value = '';
+          },
+          (err) => {
+            console.log(err);
+          }
+        );
+    }
+  };
   return (
     <HStack w="100%" gap={5} bg={secondaryColor} p={2} px={5}>
       <EmojiIcon color={quaternaryColor} />
@@ -137,7 +162,7 @@ const MessageInput = (): JSX.Element => {
         type="text"
         placeholder="Type message"
         color={quaternaryColor}
-        onKeyDown={}
+        onKeyDown={onSubmit}
       />
       <MicIcon color={quaternaryColor} />
     </HStack>
@@ -149,6 +174,7 @@ const SessionDiscussion = (): JSX.Element => {
   const { user } = useContext(AuthContext);
   const sessionUser =
     session?.user1?.id === user?.id ? session?.user2 : session?.user1;
+
   return (
     <VStack h="100%">
       <SessionDiscussionHeader sessionUser={sessionUser} />
@@ -168,11 +194,11 @@ const SessionDiscussion = (): JSX.Element => {
             key={msg?.id}
             message={msg?.message}
             time={msg?.date}
-            isRightSide={msg?.senderId === sessionUser?.id}
+            isRightSide={msg?.senderId !== sessionUser?.id}
           />
         ))}
       </VStack>
-      <MessageInput />
+      <MessageInput sessionId={session?.id} />
     </VStack>
   );
 };

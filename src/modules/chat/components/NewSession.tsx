@@ -13,6 +13,7 @@ import { useContext, useEffect, useState } from 'react';
 import { User } from '../../../models/user';
 import { chatActions, userActions } from '../../../helpers/actions';
 import { AuthContext } from '../../../app/authContext';
+import { SessionContext } from '../../../app/sessionContext';
 
 const NewSession = ({
   onClose,
@@ -23,6 +24,8 @@ const NewSession = ({
 }) => {
   const [usersList, setUsersList] = useState<User[]>([]);
   const { user } = useContext(AuthContext);
+  const { sessionsList, setSessionsList } = useContext(SessionContext);
+
   const toast = useToast();
   useEffect(() => {
     const getUsers = () => {
@@ -49,6 +52,7 @@ const NewSession = ({
             status: 'success',
             duration: 1000,
           });
+          setSessionsList([...sessionsList, data]);
         }
       })
       .catch(() => {

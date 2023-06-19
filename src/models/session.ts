@@ -7,7 +7,7 @@ export interface ISession {
   messages: IMessage[];
 }
 
-interface IMessage {
+export interface IMessage {
   id: string;
   message: string;
   senderId: string;
